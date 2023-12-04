@@ -14,7 +14,6 @@ export default function Question() {
   const { id } = useParams();
   const { data, isLoading: postLoading } = useGetPostByIdQuery(id);
   const [commentData, setCommentData] = useState([]);
-  const [commentLoading, setCommentLoading] = useState(false);
 
   const [portalVisibility, setPortalVisibility] = useState(false);
   const [refetchComment, setRefetchComment] = useState(0);
@@ -24,15 +23,9 @@ export default function Question() {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        setCommentLoading(true);
         const response = await api.get(`/post/${id}/comments`);
-        console.log(response);
         setCommentData(response?.data?.data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setCommentLoading(false);
-      }
+      } catch (error) {}
     };
 
     fetchComments();
@@ -85,16 +78,21 @@ export default function Question() {
   };
 
   return (
-    <div className="max-w-[658px] mx-auto navSmall:mt-8 mt-[72px] pt-8 lg:flex block flex-row items-stretch pb-8">
+    <div className="max-w-[658px] min-h-screen mx-auto navSmall:mt-8 mt-[72px] pt-8 lg:flex block flex-row items-stretch pb-8">
       <div className="w-full h-full">
-        <div className="bg-white border rounded px-3 pt-3">
-          <div className="text-xl font-bold">{data?.data?.title}</div>
+        <div className="bg-white dark:bg-[#262626] dark:border-[#262626] border rounded px-3 pt-3">
+          <div className="text-xl font-bold dark:text-[#cdcdcd]">
+            {data?.data?.title}
+          </div>
           <div className="py-1 flex justify-between">
             <button
               onClick={openAnswerPortal}
-              className="h-10 border rounded-full px-5 text-[#636466] text-sm hover:bg-[rgba(0,0,0,0.03)] transition flex items-center gap-1"
+              className="h-10 border rounded-full dark:border-[rgba(177,179,182,0.2)] px-5 text-[#636466] dark:text-[#b1b3b6] text-sm hover:bg-[rgba(0,0,0,0.03)] transition flex items-center gap-1"
             >
-              <LiaPenSquareSolid size={30} color="#636466" />
+              <LiaPenSquareSolid
+                size={30}
+                className="dark:fill-[#b1b3b6] fill-[#636466]"
+              />
               Answer
             </button>
             {portalVisibility &&
@@ -109,16 +107,16 @@ export default function Question() {
                 portal
               )}
 
-            <div className="flex">
+            <div className="flex gap-2">
               <button
                 onClick={like}
-                className="px-3 hover:bg-[#00000008] rounded-full flex items-center"
+                className="px-3 hover:bg-[#00000008] dark:hover:bg-[rgba(255,255,255,0.04)] dark:border-[#393839] dark:border rounded-full flex items-center"
               >
                 <ImArrowUp size={15} color="#636466" />
               </button>
               <button
                 onClick={dislike}
-                className="px-3 rounded-full hover:bg-[#00000008] flex items-center"
+                className="px-3 hover:bg-[#00000008] dark:hover:bg-[rgba(255,255,255,0.04)] dark:border-[#393839] dark:border rounded-full flex items-center"
               >
                 <ImArrowDown size={15} color="#636466" />
               </button>

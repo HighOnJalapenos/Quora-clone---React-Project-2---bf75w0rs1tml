@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react";
 import { useGetUserByIdQuery } from "../../redux/services/quoraApi";
 import { useNavigate } from "react-router-dom";
-
 import { BiUserCircle } from "react-icons/bi";
 import ThreeDotsLoading from "../../assets/icons/ThreeDotsLoading";
-
 import FirstComment from "../CommentComponents/FirstComment";
 import { api } from "../../api/axios";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 export default function Answers({ singleAnswer, setRefetchComment }) {
   const navigate = useNavigate();
   const { author, content, _id, children } = singleAnswer;
   const { data: authorData, isLoading } = useGetUserByIdQuery(author);
-
+  const { userId } = useSelector((state) => state.auth.user);
   const [commentVisibility, setCommentVisibility] = useState(false);
   const [userComment, setUserComment] = useState(false);
   const [editedComment, setEditedComment] = useState(content);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (author === "6538dbb07831f45044740153") {
+    if (author === userId) {
       setUserComment(true);
     }
   }, []);
@@ -70,11 +69,11 @@ export default function Answers({ singleAnswer, setRefetchComment }) {
         notify("Comment deleted");
         setRefetchComment((prev) => prev + 1);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {});
   };
 
   return (
-    <div className="my-2 rounded border bg-white">
+    <div className="my-2 rounded border bg-white dark:bg-[#262626] dark:border-[#262626] dark:text-[#d5d6d6]">
       <div className="px-3 pt-3">
         <div className="flex flex-nowrap mb-2 items-center">
           <div
@@ -109,7 +108,7 @@ export default function Answers({ singleAnswer, setRefetchComment }) {
               <input
                 value={editedComment}
                 onChange={(e) => setEditedComment(e.target.value)}
-                className="px-4 py-2 w-full outline-none border"
+                className="px-4 py-2 w-full dark:bg-[#181818] outline-none border dark:border-[#393839]"
               />
               <button
                 type="submit"
@@ -143,12 +142,12 @@ export default function Answers({ singleAnswer, setRefetchComment }) {
         )}
 
         <div className="py-1">
-          <div className="flex items-center border rounded-full">
+          <div className="flex items-center border rounded-full dark:border-[#393839]">
             <div
               onClick={showComment}
-              className="px-2 flex items-center h-7 w-full hover:bg-[#00000008] cursor-pointer rounded-full"
+              className="px-2 flex items-center h-7 w-full hover:bg-[#00000008] dark:hover:bg-[rgba(255,255,255,0.04)] dark:bg-[rgba(255,255,255,0.05)] cursor-pointer rounded-full"
             >
-              <span className="text-[#636466] text-xs font-bold m-auto">
+              <span className="text-[#636466] dark:text-[#b1b3b6] text-xs font-bold m-auto">
                 {children.length} Comments
               </span>
             </div>
@@ -158,7 +157,7 @@ export default function Answers({ singleAnswer, setRefetchComment }) {
 
       <div>
         {isLoading && (
-          <div className="bg-[#f7f7f8] flex justify-center">
+          <div className="bg-[#f7f7f8] dark:bg-[#262626] flex justify-center">
             <ThreeDotsLoading />
           </div>
         )}
